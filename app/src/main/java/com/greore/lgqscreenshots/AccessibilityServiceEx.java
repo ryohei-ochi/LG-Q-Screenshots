@@ -3,6 +3,8 @@ package com.greore.lgqscreenshots;
 import android.accessibilityservice.AccessibilityService;
 import android.graphics.Bitmap;
 import android.media.Image;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -105,6 +107,16 @@ public class AccessibilityServiceEx extends AccessibilityService {
             FileOutputStream outStream = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
             outStream.close();
+
+            MediaScannerConnection.scanFile(this,
+                    new String[] { file.getAbsolutePath() }, null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        @Override
+                        public void onScanCompleted(String path, Uri uri) {
+                            Log.v("MediaScanWork", "file " + path
+                                    + " was scanned seccessfully: " + uri);
+                        }
+                    });
         } catch (Exception e) {
             e.printStackTrace();
         }
